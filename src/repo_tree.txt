@@ -1,0 +1,41 @@
+.
+├── application
+│   ├── controllers
+│   │   └── bots_controller.py
+│   ├── dependencies
+│   ├── dto
+│   │   ├── request.py
+│   │   └── responses.py
+│   ├── main.py
+│   └── use_cases
+│       └── run_time
+│           ├── agents
+│           ├── bot_handle_loader.py
+│           └── bot_registry.py
+├── config
+│   └── settings.py
+├── domain
+│   ├── entities.py
+│   └── schema.py
+├── infrastructure
+│   └── db.py
+├── persistence
+│   ├── artifact_store.py
+│   └── bot_repository.py
+├── repo_tree.txt
+├── services
+│   ├── embeddings.py
+│   ├── ingestion
+│   │   ├── chunking.py
+│   │   ├── normalize.py
+│   │   └── reader.py
+│   ├── llm
+│   │   └── azure_openia.py
+│   ├── storage
+│   │   └── blob.py
+│   └── vectordb
+│       └── chroma.py
+└── utils
+    └── logger.py
+
+17 directories, 21 files
