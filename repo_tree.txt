@@ -1,0 +1,46 @@
+├── .env.example                           
+├── README.md                               
+└── src
+    ├── application                         
+    │   ├── controllers                     # Endpoints FastAPI: traducen HTTP ↔ use cases
+    │   │   └── bots_controller.py          # Rutas /bots (crear, query, listar versiones, etc.)
+    │   ├── dependencies                    # Wiring/DI: “ensambla” singletons y servicios
+    │   │   └── container.py                # Contenedor de dependencias (repos, adapters, use cases)
+    │   ├── dto                             # Contratos de I/O de la API (request/response)
+    │   │   ├── request.py                  # Modelos de entrada (pydantic) para endpoints
+    │   │   └── responses.py                # Modelos de salida (pydantic) para respuestas limpias
+    │   ├── main.py                         # FastAPI app factory, middlewares, include_routers
+    │   └── use_cases                       # Casos de uso del negocio (build y runtime)
+    │       ├── build
+    │       │   └── bot_factory.py          # Orquesta “build-time”: ingesta→embeddings→índice→perfil→persistencia
+    │       └── runtime
+    │           ├── agents                  # Agente(s) de ejecución: chat/RAG (+tools) según perfil
+    │           ├── bot_handle_loader.py    # “Hidrata” BotHandle: carga perfil, crea LLM Azure, prepara retriever
+    │           └── bot_registry.py         # Caché de BotHandle (in-memory/Redis) con TTL e invalidación
+    ├── config
+    │   └── settings.py                     # Config central (TTL cache, URLs, feature flags, nombres)
+    ├── domain                              # Núcleo del dominio (modelos/contratos puros)
+    │   ├── constants                       # Constantes del dominio (nombres de campos, límites, políticas)
+    │   ├── entities.py                     # Entidades: Bot, BotVersion, BotProfile (sin dependencias externas)
+    │   └── specs
+    │       └── schema.py                   # BotSpec y sub-especificaciones (provider, RAG, datasets)
+    ├── infrastructure                      # Infra transversal (conexiones “bajas”)
+    │   └── db.py                           # Conexión y session factory a la base de datos (SQLAlchemy/SQLite/PG)
+    ├── persistence                         # Acceso a datos persistentes del dominio
+    │   ├── artifact_store.py               # Lee/guarda manifest/prompts/evals en Blob/FS (bots/{id}/vN/*)
+    │   └── bot_repository.py               # CRUD metadatos: bots, versiones, perfiles (DB relacional)
+    ├── repo_tree.txt                       # Snapshot del árbol del repo (útil para revisión rápida)
+    ├── services                            # Adapters/servicios genéricos (SDKs externos, infra concreta)
+    │   ├── embeddings.py                   # Cálculo de embeddings (si no lo hace el VectorDB/LLM)
+    │   ├── ingestion                       # Utilidades de ingesta (build-time)
+    │   │   ├── chunking.py                 # Particionado de documentos (chunk size/overlap)
+    │   │   ├── normalize.py                # Limpieza/normalización (markdown/html/texto plano)
+    │   │   └── reader.py                   # Lectura de fuentes (archivos, blob, etc.)
+    │   ├── llm
+    │   │   └── azure_openia.py             # Adapter LLM (Azure OpenAI): chat(), manejo de parámetros/errores
+    │   ├── storage
+    │   │   └── blob.py                     # Adapter de almacenamiento (Blob/S3/local) para artefactos
+    │   └── vectordb
+    │       └── chroma.py                   # Adapter VectorDB (Chroma): crear índice, upsert, query (retriever)
+    └── utils
+        └── logger.py                       # Logger configurado (formato, niveles, correlation id)
